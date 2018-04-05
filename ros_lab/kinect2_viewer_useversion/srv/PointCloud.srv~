@@ -1,0 +1,5 @@
+time a
+---
+sensor_msgs/PointCloud2 pointCloud2
+sensor_msgs/Image color
+sensor_msgs/Image depth
