@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel/setup.sh

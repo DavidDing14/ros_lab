@@ -1,0 +1,8 @@
+prefix=/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel
+
+Name: kinect2_viewer
+Description: Description of kinect2_viewer
+Version: 0.0.1
+Cflags: -I/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel/include
+Libs: -L/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel/lib 
+Requires: 
