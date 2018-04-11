@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/kinect2_viewer_generate_messages_cpp"
-  "../../devel/include/kinect2_viewer/UseStamp.h"
+  "../../../devel/include/kinect2_viewer/PointCloud.h"
 )
 
 # Per-language clean rules from dependency scanning.

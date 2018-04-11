@@ -1,4 +1,4 @@
-#include "kinect2_viewer/UseStamp.h"
+#include "kinect2_viewer/PointCloud.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
@@ -9,6 +9,7 @@
 #include <mutex>
 #include <thread>
 #include <chrono>
+#include <time.h>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -47,27 +48,32 @@ int main(int argc, char **argv)
     return 1;
   }
 
+  double cost, start, end;
+
   ros::NodeHandle n;
-  ros::ServiceClient client = n.serviceClient<kinect2_viewer::UseStamp>("use_stamp", 100);
-  kinect2_viewer::UseStamp srv;
+  ros::ServiceClient client = n.serviceClient<kinect2_viewer::PointCloud>("/interact_proj/pointcloud_srvs", 100);
+  kinect2_viewer::PointCloud srv;
   ros::Time tmp(atoll(argv[1]));
   srv.request.a = tmp;
+  ROS_INFO("srv.request.a = %lf", tmp.toSec());
+  start = clock();
   if (client.call(srv))
   {
       try
       {
-	srv.response.pointCloud2.header.frame_id = "123";
+/*
+	srv.response.point_cloud.header.frame_id = "map";
 	ros::NodeHandle nt;
 	ros::Publisher pcd_pub = nt.advertise<sensor_msgs::PointCloud2>("pcd_test", 1000);
 	ros::Rate loop_rate(10);
 	while (ros::ok())
   	{
-    	  pcd_pub.publish(srv.response.pointCloud2);
+    	  pcd_pub.publish(srv.response.point_cloud);
     	  ros::spinOnce();
     	  loop_rate.sleep();
   	}
 
-	ROS_INFO("pointCloud2.header.frame_id is %d", srv.response.pointCloud2.height);
+	ROS_INFO("point_cloud.header.frame_id is %d", srv.response.point_cloud.height);
 
         cv::Mat cv_frame = cv_bridge::toCvCopy( srv.response.color, "bgr8")->image;
         cv::imshow("view", cv_frame);
@@ -76,6 +82,10 @@ int main(int argc, char **argv)
         cv::Mat cv_frame2 = cv_bridge::toCvCopy( srv.response.depth, "mono8")->image;
         cv::imshow("view2", cv_frame2);
 	cv::waitKey(0);
+*/
+	end = clock();
+	cost = end - start;
+	ROS_INFO("cost = %lf", cost / CLOCKS_PER_SEC);
       }
       catch (cv_bridge::Exception& e)
       {
@@ -84,7 +94,7 @@ int main(int argc, char **argv)
   }
   else
   {
-    ROS_ERROR("Failed to call service use_stamp");
+    ROS_ERROR("Failed to call service pointcloud_srvs");
     return 1;
   }
 

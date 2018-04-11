@@ -39,7 +39,6 @@ generate_messages(
   DEPENDENCIES
   std_msgs
   sensor_msgs
-  sensor_msgs/image
 )
 
 ################################################

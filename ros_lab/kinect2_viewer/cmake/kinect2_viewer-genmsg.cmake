@@ -15,9 +15,9 @@ add_custom_target(kinect2_viewer_generate_messages ALL)
 
 
 
-get_filename_component(_filename "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/srv/UseStamp.srv" NAME_WE)
+get_filename_component(_filename "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/srv/PointCloud.srv" NAME_WE)
 add_custom_target(_kinect2_viewer_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "kinect2_viewer" "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/srv/UseStamp.srv" "sensor_msgs/PointField:sensor_msgs/PointCloud2:std_msgs/Header:sensor_msgs/Image"
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "kinect2_viewer" "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/srv/PointCloud.srv" "sensor_msgs/PointField:sensor_msgs/PointCloud2:std_msgs/Header:sensor_msgs/Image"
 )
 
 #
@@ -29,7 +29,7 @@ add_custom_target(_kinect2_viewer_generate_messages_check_deps_${_filename}
 
 ### Generating Services
 _generate_srv_cpp(kinect2_viewer
-  "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/srv/UseStamp.srv"
+  "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/srv/PointCloud.srv"
   "${MSG_I_FLAGS}"
   "/opt/ros/indigo/share/sensor_msgs/cmake/../msg/PointField.msg;/opt/ros/indigo/share/sensor_msgs/cmake/../msg/PointCloud2.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/indigo/share/sensor_msgs/cmake/../msg/Image.msg"
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/kinect2_viewer
@@ -47,7 +47,7 @@ add_custom_target(kinect2_viewer_generate_messages_cpp
 add_dependencies(kinect2_viewer_generate_messages kinect2_viewer_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/srv/UseStamp.srv" NAME_WE)
+get_filename_component(_filename "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/srv/PointCloud.srv" NAME_WE)
 add_dependencies(kinect2_viewer_generate_messages_cpp _kinect2_viewer_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -62,7 +62,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS kinect2_viewer_generate_messages_cp
 
 ### Generating Services
 _generate_srv_lisp(kinect2_viewer
-  "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/srv/UseStamp.srv"
+  "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/srv/PointCloud.srv"
   "${MSG_I_FLAGS}"
   "/opt/ros/indigo/share/sensor_msgs/cmake/../msg/PointField.msg;/opt/ros/indigo/share/sensor_msgs/cmake/../msg/PointCloud2.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/indigo/share/sensor_msgs/cmake/../msg/Image.msg"
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/kinect2_viewer
@@ -80,7 +80,7 @@ add_custom_target(kinect2_viewer_generate_messages_lisp
 add_dependencies(kinect2_viewer_generate_messages kinect2_viewer_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/srv/UseStamp.srv" NAME_WE)
+get_filename_component(_filename "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/srv/PointCloud.srv" NAME_WE)
 add_dependencies(kinect2_viewer_generate_messages_lisp _kinect2_viewer_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -95,7 +95,7 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS kinect2_viewer_generate_messages_li
 
 ### Generating Services
 _generate_srv_py(kinect2_viewer
-  "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/srv/UseStamp.srv"
+  "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/srv/PointCloud.srv"
   "${MSG_I_FLAGS}"
   "/opt/ros/indigo/share/sensor_msgs/cmake/../msg/PointField.msg;/opt/ros/indigo/share/sensor_msgs/cmake/../msg/PointCloud2.msg;/opt/ros/indigo/share/std_msgs/cmake/../msg/Header.msg;/opt/ros/indigo/share/sensor_msgs/cmake/../msg/Image.msg"
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/kinect2_viewer
@@ -113,7 +113,7 @@ add_custom_target(kinect2_viewer_generate_messages_py
 add_dependencies(kinect2_viewer_generate_messages kinect2_viewer_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/srv/UseStamp.srv" NAME_WE)
+get_filename_component(_filename "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/srv/PointCloud.srv" NAME_WE)
 add_dependencies(kinect2_viewer_generate_messages_py _kinect2_viewer_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -154,7 +154,7 @@ if(TARGET sensor_msgs_generate_messages_lisp)
 endif()
 
 if(genpy_INSTALL_DIR AND EXISTS ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/kinect2_viewer)
-  install(CODE "execute_process(COMMAND \"/usr/bin/python\" -m compileall \"${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/kinect2_viewer\")")
+  install(CODE "execute_process(COMMAND \"/usr/local/bin/python\" -m compileall \"${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/kinect2_viewer\")")
   # install generated code
   install(
     DIRECTORY ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/kinect2_viewer

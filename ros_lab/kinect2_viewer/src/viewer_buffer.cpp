@@ -25,6 +25,7 @@
 #include <mutex>
 #include <thread>
 #include <chrono>
+#include <time.h>
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -41,7 +42,7 @@
 #include <sensor_msgs/CameraInfo.h>
 #include <sensor_msgs/Image.h>
 #include <std_msgs/Header.h>	//dxh
-#include <kinect2_viewer/UseStamp.h>	//dxh
+#include <kinect2_viewer/PointCloud.h>	//dxh
 
 #include <cv_bridge/cv_bridge.h>
 
@@ -57,6 +58,9 @@
 
 int count_num = 0;	//dxh vary from 0 to count_i, to save 1 image every count_i+1 image
 int count_i = 999999;
+std::mutex lock;
+double costTime, startTime, endTime;	//dxh calculate time between kinect2 and this node
+double callbackTimes;
 
 class dataRGBD	//save : cloud, color, depth //dxh
 {
@@ -80,25 +84,27 @@ public:
 
 std::vector<dataRGBD> imageRGBD;	//dxh
 
-bool findImage(kinect2_viewer::UseStamp::Request &req, kinect2_viewer::UseStamp::Response &res)	//dxh
+bool findImage(kinect2_viewer::PointCloud::Request &req, kinect2_viewer::PointCloud::Response &res)	//dxh
 {
+  lock.lock();
+
   double reqtoSec = req.a.toSec();
   ROS_INFO("request: stamp = %lf", reqtoSec);
-  double minSec = abs(imageRGBD[0].stamp.toSec() - reqtoSec);
+  double minSec = fabs(imageRGBD[0].stamp.toSec() - reqtoSec);
   int imageNo = 0;
   for (unsigned int i=1; i<imageRGBD.size(); ++i)
   {
-    ROS_INFO("%d %lf", i, imageRGBD[i].stamp.toSec());
-    if(abs(imageRGBD[i].stamp.toSec() - reqtoSec) < minSec)
+    //ROS_INFO("%d %lf %lf ", i, imageRGBD[i].stamp.toSec(), fabs(imageRGBD[i].stamp.toSec() - reqtoSec));
+    if(fabs(imageRGBD[i].stamp.toSec() - reqtoSec) < minSec)
     {
-      minSec = abs(imageRGBD[i].stamp.toSec() - reqtoSec);
+      minSec = fabs(imageRGBD[i].stamp.toSec() - reqtoSec);
       imageNo = i;
     }
   }
 
   sensor_msgs::PointCloud2 output;
   pcl::toROSMsg(*imageRGBD[imageNo].cloud, output);
-  res.pointCloud2 = output;
+  res.point_cloud = output;
 
 
   sensor_msgs::ImagePtr colormsg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", imageRGBD[imageNo].color).toImageMsg();
@@ -108,16 +114,20 @@ bool findImage(kinect2_viewer::UseStamp::Request &req, kinect2_viewer::UseStamp:
   sensor_msgs::ImagePtr depthmsg = cv_bridge::CvImage(std_msgs::Header(), "mono8", imageRGBD[imageNo].depth).toImageMsg();
   res.depth = *depthmsg;
 
-  ROS_INFO("res.depth.encoding is %s", depthmsg->encoding.c_str());
+  //ROS_INFO("res.depth.encoding is %s", depthmsg->encoding.c_str());
 
   ROS_INFO("sending back response: [%ld]", (long int)imageNo);
+  ROS_INFO("imgaeRGBD[imageNo].stamp = %lf", imageRGBD[imageNo].stamp.toSec());
+  ROS_INFO("timediff = %lf", minSec);
+  
+  lock.unlock();
+
   return true;
 }
 
 class Receiver
 {
 private:
-  std::mutex lock;
 
   const std::string topicColor, topicDepth;
   const bool useExact, useCompressed;
@@ -242,6 +252,11 @@ private:
   void callback(const sensor_msgs::Image::ConstPtr imageColor, const sensor_msgs::Image::ConstPtr imageDepth,
                 const sensor_msgs::CameraInfo::ConstPtr cameraInfoColor, const sensor_msgs::CameraInfo::ConstPtr cameraInfoDepth)
   {
+    //callbackTimes++;
+    //endTime = clock();
+    //costTime = (endTime - startTime) / CLOCKS_PER_SEC;
+    //ROS_INFO("average costTime = %lf", costTime / callbackTimes);
+
     cv::Mat color, depth;
 
     readCameraInfo(cameraInfoColor, cameraMatrixColor);
@@ -266,6 +281,8 @@ private:
 
     createCloud(depth, color, cloud);
 
+    lock.lock();
+
     dataRGBD newData(cloud, color, depth, imageColor->header.stamp);	//dxh
     if(imageRGBD.size()>=100)
     {
@@ -273,6 +290,8 @@ private:
     }
     imageRGBD.push_back(newData);
     //ROS_INFO("newData.stamp is %lf", newData.stamp.toSec());
+    
+    lock.unlock();
   }
 
   void readImage(const sensor_msgs::Image::ConstPtr msgImage, cv::Mat &image) const
@@ -374,7 +393,7 @@ int main(int argc, char **argv)
   ros::init(argc, argv, "kinect2_viewer", ros::init_options::AnonymousName);
   
   ros::NodeHandle nd;	//dxh
-  ros::ServiceServer service = nd.advertiseService("use_stamp", findImage);	//dxh
+  ros::ServiceServer service = nd.advertiseService("/interact_proj/pointcloud_srvs", findImage);	//dxh
   ROS_INFO("Ready to findImage with stamp");	//dxh
 
   if(!ros::ok())
@@ -408,6 +427,11 @@ int main(int argc, char **argv)
   Receiver receiver(topicColor, topicDepth, useExact, useCompressed);
 
   OUT_INFO("starting receiver...");
+
+  //costTime = 0;
+  //callbackTimes = 0;
+  //startTime = clock();
+
   receiver.run();
 
   ros::shutdown();

@@ -1,4 +1,4 @@
-# Install script for directory: /home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer
+# Install script for directory: /home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -33,11 +33,11 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kinect2_viewer/srv" TYPE FILE FILES "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/srv/UseStamp.srv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kinect2_viewer/srv" TYPE FILE FILES "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/srv/PointCloud.srv")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kinect2_viewer/cmake" TYPE FILE FILES "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewer-msg-paths.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kinect2_viewer/cmake" TYPE FILE FILES "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewer-msg-paths.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -49,7 +49,7 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  execute_process(COMMAND "/usr/bin/python" -m compileall "/home/oslab/catkin_ws/src/devel/lib/python2.7/dist-packages/kinect2_viewer")
+  execute_process(COMMAND "/usr/local/bin/python" -m compileall "/home/oslab/catkin_ws/src/devel/lib/python2.7/dist-packages/kinect2_viewer")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
@@ -57,22 +57,22 @@ if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspeci
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewer.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewer.pc")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kinect2_viewer/cmake" TYPE FILE FILES "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewer-msg-extras.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kinect2_viewer/cmake" TYPE FILE FILES "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewer-msg-extras.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kinect2_viewer/cmake" TYPE FILE FILES
-    "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewerConfig.cmake"
-    "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewerConfig-version.cmake"
+    "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewerConfig.cmake"
+    "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/catkin_generated/installspace/kinect2_viewerConfig-version.cmake"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kinect2_viewer" TYPE FILE FILES "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kinect2_viewer" TYPE FILE FILES "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/package.xml")
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")

@@ -6,5 +6,5 @@ CXX_FLAGS =  -DBT_USE_DOUBLE_PRECISION -Wall -Wuninitialized -Winit-self -Wunuse
 
 CXX_DEFINES = -DROSCONSOLE_BACKEND_LOG4CXX -DROS_BUILD_SHARED_LIBS=1 -DROS_PACKAGE_NAME=\"kinect2_viewer\"
 
-CXX_INCLUDES = -I/home/oslab/catkin_ws/src/devel/include -I/usr/include/opencv -I/usr/include/vtk-5.8 -I/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/include -I/home/oslab/catkin_ws/src/iai_kinect2/kinect2_bridge/include -I/home/oslab/catkin_ws/src/iai_kinect2/kinect2_registration/include -I/opt/ros/indigo/include -I/usr/local/include -I/usr/include/pcl-1.7 -I/usr/include/eigen3 -I/usr/include/ni 
+CXX_INCLUDES = -I/home/oslab/catkin_ws/src/devel/include -I/usr/include/opencv -I/usr/include/vtk-5.8 -I/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/include -I/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_bridge/include -I/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_registration/include -I/opt/ros/indigo/include -I/usr/local/include -I/usr/include/pcl-1.7 -I/usr/include/eigen3 -I/usr/include/ni 
 

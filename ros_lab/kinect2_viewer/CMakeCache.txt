@@ -599,7 +599,7 @@ kinect2_viewer_BINARY_DIR:STATIC=/home/oslab/catkin_ws/src/iai_kinect2/kinect2_v
 kinect2_viewer_SOURCE_DIR:STATIC=/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer
 
 //Path to a library.
-lib:FILEPATH=/home/oslab/catkin_ws/devel/lib/libkinect2_registration.so
+lib:FILEPATH=lib-NOTFOUND
 
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/indigo/share/message_filters/cmake

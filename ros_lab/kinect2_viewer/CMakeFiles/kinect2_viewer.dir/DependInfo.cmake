@@ -4,7 +4,7 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/src/viewer.cpp" "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/CMakeFiles/kinect2_viewer.dir/src/viewer.cpp.o"
+  "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/src/viewer.cpp" "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_viewer/CMakeFiles/kinect2_viewer.dir/src/viewer.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 
@@ -20,9 +20,9 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
   "devel/include"
   "/usr/include/opencv"
   "/usr/include/vtk-5.8"
-  "iai_kinect2/kinect2_viewer/include"
-  "iai_kinect2/kinect2_bridge/include"
-  "iai_kinect2/kinect2_registration/include"
+  "interact_proj/iai_kinect2/kinect2_viewer/include"
+  "interact_proj/iai_kinect2/kinect2_bridge/include"
+  "interact_proj/iai_kinect2/kinect2_registration/include"
   "/opt/ros/indigo/include"
   "/usr/local/include"
   "/usr/include/pcl-1.7"
@@ -32,7 +32,7 @@ set(CMAKE_CXX_TARGET_INCLUDE_PATH
 
 # Targets to which this target links.
 set(CMAKE_TARGET_LINKED_INFO_FILES
-  "/home/oslab/catkin_ws/src/iai_kinect2/kinect2_registration/CMakeFiles/kinect2_registration.dir/DependInfo.cmake"
+  "/home/oslab/catkin_ws/src/interact_proj/iai_kinect2/kinect2_registration/CMakeFiles/kinect2_registration.dir/DependInfo.cmake"
   )
 
 # Fortran module output directory.

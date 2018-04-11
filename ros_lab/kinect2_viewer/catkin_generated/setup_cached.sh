@@ -12,5 +12,5 @@ export CPATH="/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel/include
 export LD_LIBRARY_PATH="/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PYTHONPATH="/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel/lib/python2.7/dist-packages:$PYTHONPATH"
-export ROSLISP_PACKAGE_DIRECTORIES="/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROSLISP_PACKAGE_DIRECTORIES="/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer/devel/share/common-lisp"
 export ROS_PACKAGE_PATH="/home/oslab/catkin_ws/src/iai_kinect2/kinect2_viewer:$ROS_PACKAGE_PATH"

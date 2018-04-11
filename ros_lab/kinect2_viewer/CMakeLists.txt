@@ -32,7 +32,7 @@ endif()
 
 add_service_files(
   FILES
-  UseStamp.srv
+  PointCloud.srv
 )
 
 generate_messages(

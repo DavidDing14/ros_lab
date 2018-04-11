@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/kinect2_viewer_generate_messages_lisp"
-  "../../devel/share/common-lisp/ros/kinect2_viewer/srv/UseStamp.lisp"
+  "../../../devel/share/common-lisp/ros/kinect2_viewer/srv/PointCloud.lisp"
 )
 
 # Per-language clean rules from dependency scanning.
