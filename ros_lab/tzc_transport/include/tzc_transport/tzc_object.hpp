@@ -3,6 +3,7 @@
 
 #include <boost/interprocess/managed_shared_memory.hpp>
 #include <boost/atomic/atomic.hpp>
+#include <ros/ros.h>
 
 namespace tzc_transport
 {
@@ -21,6 +22,7 @@ public:
     next = hc;
     prev = hc;
     ref = ref0;
+    saveRef = 0;
   }
   ~ShmMessage() {
   }
@@ -34,11 +36,17 @@ public:
     lp->next = hc;
     ln->prev = hc;
   }
-  bool releaseFirst(const ShmManagerPtr & pshm) {
+  double releaseFirst(const ShmManagerPtr & pshm) {
     long hc = next;
     ShmMessage * lc = (ShmMessage *)pshm->get_address_from_handle(hc);
     if (lc == this)
-      return false;
+      return -1;
+    if (saveRef != 0)
+    {
+      ROS_INFO("saveRef != 0, assist node find this image");
+      return -1;
+    }
+    double time_ = lc->getTimeStamp();
 //    if (lc->ref != 0)
 //      return false;
     long hn = lc->next, hp = lc->prev;
@@ -46,7 +54,7 @@ public:
     lp->next = hn;
     ln->prev = hp;
     pshm->deallocate(lc);
-    return true;
+    return time_;
   }
   long getFirstHandle() {
     return next;
@@ -66,8 +74,20 @@ public:
     return ref;
   }
 
+  uint32_t getNext() {
+    return next;
+  }
+
   uint32_t getPrev() {
     return prev;
+  }
+
+  void setTimeStamp(double setTime) {
+    timeStamp = setTime;
+  }
+
+  double getTimeStamp() {
+    return timeStamp;
   }
 
 private:
@@ -75,6 +95,7 @@ private:
   long prev;
   atomic_int32_t ref;
   double timeStamp;	//image time
+  atomic_int32_t saveRef;	//0 : can release / 1 : cannot release
 };
 
 class ShmObject
@@ -100,9 +121,9 @@ public:
     ptr->setRef(1);
     plck_->unlock();
   }
-  bool releaseFirst() {
+  double releaseFirst() {
     plck_->lock();
-    bool res = pmsg_->releaseFirst(pshm_);
+    double res = pmsg_->releaseFirst(pshm_);
     plck_->unlock();
     return res;
   }
@@ -120,9 +141,10 @@ public:
   // in shm, message list and ref count (pub # + sub #)
   ShmMessage * pmsg_;
 
-private:
   // smart pointer of shm
   ShmManagerPtr pshm_;
+
+private:
   // name of shm
   std::string name_;
   // in shm, connection lock

@@ -51,7 +51,7 @@ public:
           ROS_WARN("the oldest is in use, abandon this message <%p>...", &msg);
           break;
         } else {
-	  //pub_time.publish(timeStamp);
+	  pub_time.publish(timeStamp);
 	}
       }
     }

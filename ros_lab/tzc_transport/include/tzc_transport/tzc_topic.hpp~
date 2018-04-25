@@ -4,7 +4,7 @@
 #include "ros/ros.h"
 #include "tzc_publisher.hpp"
 #include "tzc_subscriber.hpp"
-#include "std_msgs/Float64.h"
+#include "std_msgs/Float64"
 
 namespace tzc_transport
 {

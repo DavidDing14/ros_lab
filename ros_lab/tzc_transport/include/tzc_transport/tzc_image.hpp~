@@ -87,8 +87,10 @@ public:
   uint32_t         data_size;
   long             data_handle;
 
-private:
   ShmObjectPtr pobj_;
+
+private:
+  
 
   friend class Publisher< Image_<ContainerAllocator> >;
   friend class SubscriberCallbackHelper< Image_<ContainerAllocator> >;

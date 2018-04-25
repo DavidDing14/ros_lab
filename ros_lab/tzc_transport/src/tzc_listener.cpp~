@@ -29,7 +29,7 @@ void chatterCallback(const ImageConstPtr & msg) {
   //ROS_INFO("I heard: [%d, %f] deltaT=%fms \n data_handle=%ld  ref=%d", *(uint32_t *)msg->data, msg->header.stamp.toSec(),
   //         (ros::Time::now() - msg->header.stamp).toSec() * 1000.0, msg->data_handle, msg->pobj_->pmsg_->getRef());
 
-  ROS_INFO("msg->height = %d, msg->width = %d", msg->height, msg->width);
+  //ROS_INFO("msg->height = %d, msg->width = %d", msg->height, msg->width);
 
   dataHandler newData(msg->header.stamp, msg->data_handle);	//dxh
   if(dataBuffer.size()>=100)
@@ -38,8 +38,12 @@ void chatterCallback(const ImageConstPtr & msg) {
   }
   dataBuffer.push_back(newData);
 
-//  long prev_handle = msg->pobj_->pmsg_->getPrev();
-//  uint8_t * data = (uint8_t *)msg->pobj_->convertHandle2Address(prev_handle);
+  ShmManager * pshm = new tzc_transport::ShmManager(boost::interprocess::open_only, "_kinect2_raw_color");
+  long prev_handle = msg->pobj_->pmsg_->getPrev();
+  ShmMessage * prevData = (ShmMessage *)pshm->get_address_from_handle(prev_handle);
+  prev_handle = prevData->getPrev();
+  prevData = (ShmMessage *)pshm->get_address_from_handle(prev_handle);
+  ROS_INFO("prevData : timeStamp = %f", prevData->getTimeStamp());
 //show image that we get
 //  cv::Mat rgbmat;
 

@@ -38,8 +38,14 @@ void chatterCallback(const ImageConstPtr & msg) {
   }
   dataBuffer.push_back(newData);
 
-//  long prev_handle = msg->pobj_->pmsg_->getPrev();
-//  uint8_t * data = (uint8_t *)msg->pobj_->convertHandle2Address(prev_handle);
+  ShmManager * pshm = new tzc_transport::ShmManager(boost::interprocess::open_only, "_kinect2_raw_color");
+  long prev_handle = msg->pobj_->pmsg_->getPrev();
+  ShmMessage * prevData = (ShmMessage *)pshm->get_address_from_handle(prev_handle);
+  for(int ic = 0; ic<=10; ++ic){
+    prev_handle = prevData->getPrev();
+    prevData = (ShmMessage *)pshm->get_address_from_handle(prev_handle);
+  }
+  ROS_INFO("prevData : timeStamp = %f", prevData->getTimeStamp());
 //show image that we get
 //  cv::Mat rgbmat;
 

@@ -69,6 +69,7 @@ private:
     pobj_ = pobj;
     data = (uint8_t *)(ptr + 1);
     data_handle = pobj_->convertAddress2Handle(data);
+    ptr->setTimeStamp(this->header.stamp.toSec());
     pobj_->addLast(ptr);
   }
   // find parent ShmMessage
