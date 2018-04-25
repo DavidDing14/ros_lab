@@ -46,7 +46,7 @@ public:
       ROS_INFO("saveRef != 0, assist node find this image");
       return -1;
     }
-    double time_ = lc->getTimeStamp;
+    double time_ = lc->getTimeStamp();
 //    if (lc->ref != 0)
 //      return false;
     long hn = lc->next, hp = lc->prev;
@@ -124,6 +124,7 @@ public:
   double releaseFirst() {
     plck_->lock();
     double res = pmsg_->releaseFirst(pshm_);
+    ROS_INFO("res = %f", res);
     plck_->unlock();
     return res;
   }

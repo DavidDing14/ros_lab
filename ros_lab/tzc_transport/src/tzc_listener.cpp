@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <tzc_transport/findHandle.h>
+#include <std_msgs/Float64.h>
 
 using namespace tzc_transport;
 
@@ -34,10 +35,12 @@ void chatterCallback(const ImageConstPtr & msg) {
   dataHandler newData(msg->header.stamp, msg->data_handle);	//dxh
   if(dataBuffer.size()>=100)
   {
+    ROS_INFO("erase data = %f", dataBuffer[0].timeStamp.toSec());
     dataBuffer.erase(dataBuffer.begin());
   }
   dataBuffer.push_back(newData);
 
+/*
   ShmManager * pshm = new tzc_transport::ShmManager(boost::interprocess::open_only, "_kinect2_raw_color");
   long prev_handle = msg->pobj_->pmsg_->getPrev();
   ShmMessage * prevData = (ShmMessage *)pshm->get_address_from_handle(prev_handle);
@@ -46,6 +49,7 @@ void chatterCallback(const ImageConstPtr & msg) {
     prevData = (ShmMessage *)pshm->get_address_from_handle(prev_handle);
   }
   ROS_INFO("prevData : timeStamp = %f", prevData->getTimeStamp());
+*/
 //show image that we get
 //  cv::Mat rgbmat;
 
@@ -82,6 +86,10 @@ bool findHandle_(tzc_transport::findHandle::Request &req, tzc_transport::findHan
   return true;
 }
 
+void releaseCallback(const std_msgs::Float64::ConstPtr & msg) {
+  ROS_INFO("release msg->data = %f", msg->data);
+}
+
 int main(int argc, char ** argv) {
   ros::init(argc, argv, "tzc_listener", ros::init_options::AnonymousName);
   ros::NodeHandle n;
@@ -92,6 +100,10 @@ int main(int argc, char ** argv) {
   ros::NodeHandle nd;	//dxh
   ros::ServiceServer service = nd.advertiseService("find_Handle", findHandle_);	//dxh
   ROS_INFO("Ready to findImage with stamp");	//dxh
+
+  ros::NodeHandle np_;	//dxh
+  ros::Subscriber sub_np_ = np_.subscribe("release_time", 30, releaseCallback);
+  ROS_INFO("Ready to get release time");
 
   ros::spin();
   return 0;

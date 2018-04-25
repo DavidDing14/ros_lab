@@ -6,9 +6,11 @@
 #include "std_msgs/UInt64.h"
 #include "tzc_object.hpp"
 #include "std_msgs/Header.h"
+#include "std_msgs/Float64.h"
 
 namespace tzc_transport
 {
+	  std_msgs::Float64 msg_;
 
 class Topic;
 
@@ -28,6 +30,7 @@ public:
 
   Publisher & operator = (const Publisher & p) {
     pub_ = p.pub_;
+    pub_time = p.pub_time;
     pobj_ = p.pobj_;
     return *this;
   }
@@ -51,7 +54,9 @@ public:
           ROS_WARN("the oldest is in use, abandon this message <%p>...", &msg);
           break;
         } else {
-	  pub_time.publish(timeStamp);
+ 	  msg_.data = timeStamp;
+	  ROS_INFO("msg_.data = %f", msg_.data);
+    	  pub_time.publish(msg_);
 	}
       }
     }
@@ -79,6 +84,7 @@ public:
 
   void shutdown() {
     pub_.shutdown();
+    pub_time.shutdown();
   }
 
   std::string getTopic() const {

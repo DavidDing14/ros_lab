@@ -124,6 +124,7 @@ public:
   double releaseFirst() {
     plck_->lock();
     double res = pmsg_->releaseFirst(pshm_);
+    ROS_INFO("res = %f", res);
     plck_->unlock();
     return res;
   }

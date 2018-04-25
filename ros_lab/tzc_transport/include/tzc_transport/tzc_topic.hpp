@@ -12,6 +12,11 @@ namespace tzc_transport
 class Topic
 {
 public:
+  Topic(const ros::NodeHandle & parent, const ros::NodeHandle & parent_p) {
+    nh_ = parent;
+    np_ = parent_p;
+  }
+
   Topic(const ros::NodeHandle & parent) {
     nh_ = parent;
   }
@@ -22,7 +27,7 @@ public:
   template < class M >
   Publisher< M > advertise(const std::string & topic, uint32_t queue_size, uint32_t mem_size) {
     ros::Publisher pub = nh_.advertise< M >(topic, queue_size);
-    ros::Publisher pub_time = nh_.advertise< std_msgs::Float64 >("release_time", 30);
+    ros::Publisher pub_time = np_.advertise< std_msgs::Float64 >("release_time", 30);
     return Publisher< M >(pub, topic, mem_size, pub_time);
   }
 
@@ -35,6 +40,7 @@ public:
 
 private:
   ros::NodeHandle nh_;
+  ros::NodeHandle np_;
 };
 
 } // namespace tzc_transport
