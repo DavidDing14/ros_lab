@@ -40,11 +40,11 @@ public:
     long hc = next;
     ShmMessage * lc = (ShmMessage *)pshm->get_address_from_handle(hc);
     if (lc == this)
-      return -1;
-    if (saveRef != 0)
+      return -1;	//-1 means no more image
+    if (lc->saveRef != 0)
     {
-      ROS_INFO("saveRef != 0, assist node find this image");
-      return -1;
+      ROS_INFO("saveRef != 0, assist node find this image, this image is on use");
+      return -2;	//-2 means image is on use
     }
     double time_ = lc->getTimeStamp();
 //    if (lc->ref != 0)
@@ -88,6 +88,20 @@ public:
 
   double getTimeStamp() {
     return timeStamp;
+  }
+
+  void addSaveRef() {
+    saveRef.fetch_add(1, boost::memory_order_relaxed);
+    ROS_INFO("add saveRef");
+  }
+
+  void subSaveRef() {
+    saveRef.fetch_sub(1, boost::memory_order_relaxed);
+    ROS_INFO("sub saveRef");
+  }
+
+  uint32_t getSaveRef() {
+    return saveRef;
   }
 
 private:

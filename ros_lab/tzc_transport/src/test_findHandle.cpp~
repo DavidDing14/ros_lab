@@ -9,6 +9,9 @@
 #define depthwidth 512
 #define colorheight 1080
 #define colorwidth 1920
+#define mainTopic "_kinect2_raw_color"
+
+using namespace tzc_transport;
 
 int main(int argc, char **argv)
 {
@@ -24,25 +27,40 @@ int main(int argc, char **argv)
   tzc_transport::findHandle srv;
   ros::Time tmp(atoll(argv[1]));
   srv.request.timeStamp = tmp;
-  ROS_INFO("srv.request.timeStamp = %f", tmp.toSec());
+  //ROS_INFO("srv.request.timeStamp = %f", tmp.toSec());
 
-  tzc_transport::ShmManager * pshm = new tzc_transport::ShmManager(boost::interprocess::open_only, "_kinect2_raw_color");
-  tzc_transport::ShmObjectPtr pobj_ = tzc_transport::ShmObjectPtr(new tzc_transport::ShmObject(pshm, "_kinect2_raw_color"));
-
+  tzc_transport::ShmManager * pshm = new tzc_transport::ShmManager(boost::interprocess::open_only, mainTopic);
+  tzc_transport::ShmObjectPtr pobj_ = tzc_transport::ShmObjectPtr(new tzc_transport::ShmObject(pshm, mainTopic));
+  ros::Time start_ = ros::Time::now();
   if (client.call(srv))
   {
+    ros::Time end_ = ros::Time::now();
+    ros::Duration t_ = end_ - start_;
+    ROS_INFO("time duration = %f", t_.toSec());
     long got_data_handle = srv.response.data_handle;
-    ROS_INFO("data_handle : %ld", got_data_handle);
+    //ROS_INFO("data_handle : %ld", got_data_handle);
+/*	//dxh cannot find version
+    if (got_data_handle == -1)
+    {
+      ROS_ERROR("cannot find the image");
+      return 1;
+    }
+*/
+
+    ShmManager * pshm = new tzc_transport::ShmManager(boost::interprocess::open_only, mainTopic);
+    ShmMessage * msgData = (ShmMessage *)pshm->get_address_from_handle(got_data_handle);
+    msgData->subSaveRef();
+
     uint8_t * data = (uint8_t *)pobj_->convertHandle2Address(got_data_handle);
     cv::Mat rgbmat;
 
-    cv::Mat(depthheight, depthwidth, CV_8UC4, data).copyTo(rgbmat);
+    cv::Mat(colorheight, colorwidth, CV_8UC4, data).copyTo(rgbmat);
     cv::imshow("rgb", rgbmat);
     cv::waitKey(0);
   }
   else
   {
-    ROS_ERROR("Failed to call service add_two_ints");
+    ROS_ERROR("Failed to call service find_Handle");
     return 1;
   }
 

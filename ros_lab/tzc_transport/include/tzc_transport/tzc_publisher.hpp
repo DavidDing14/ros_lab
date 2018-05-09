@@ -49,10 +49,13 @@ public:
         ptr = msg.allocate(pobj_);
       } catch (boost::interprocess::bad_alloc e) {
         double timeStamp = pobj_->releaseFirst();
-        if (timeStamp == -1) {
+        if (timeStamp == -2) {
           ROS_WARN("the oldest is in use, abandon this message <%p>...", &msg);
           break;
-        } else {
+        } else if (timeStamp == -1) {
+	  ROS_WARN("image number == 0, no more image");
+	  break;
+	} else {
 	  std_msgs::Float64 msg_;
  	  msg_.data = timeStamp;
 	  ROS_INFO("msg_.data = %f", msg_.data);

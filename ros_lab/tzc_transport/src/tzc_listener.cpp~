@@ -10,6 +10,8 @@
 
 using namespace tzc_transport;
 
+double minDuration = 0.001;	//dxh when release image, the duration between aim and dataHandler[i], see Func :: releaseCallback() for detail
+
 class dataHandler	//dxh  save timeStamp and data_handle, so that we can find data_handle with timeStamp, and use data_handle with pobj to find data_address
 {
 public:
@@ -19,9 +21,18 @@ public:
   dataHandler(ros::Time timeStamp, long data_handle) {
     this->timeStamp = timeStamp;
     this->data_handle = data_handle;
+    releaseOrNot = 1;
   }
   ~dataHandler() {
   }
+  void releaseThis() {
+    releaseOrNot = 0;
+  }
+  bool getReleaseInfo() {
+    return releaseOrNot;
+  }
+private:
+  bool releaseOrNot;	//dxh 1 on create, 0 when release, see Func :: releaseCallback() for detail
 };
 
 std::vector<dataHandler> dataBuffer;	//dxh
@@ -31,10 +42,12 @@ void chatterCallback(const ImageConstPtr & msg) {
   //         (ros::Time::now() - msg->header.stamp).toSec() * 1000.0, msg->data_handle, msg->pobj_->pmsg_->getRef());
 
   //ROS_INFO("msg->height = %d, msg->width = %d", msg->height, msg->width);
-
+  ros::Duration t_ = ros::Time::now() - msg->header.stamp;
+  ROS_INFO("time duration = %f", t_.toSec());
   dataHandler newData(msg->header.stamp, msg->data_handle);	//dxh
   if(dataBuffer.size()>=100)
   {
+    //ROS_INFO("erase data = %f", dataBuffer[0].timeStamp.toSec());
     dataBuffer.erase(dataBuffer.begin());
   }
   dataBuffer.push_back(newData);
@@ -68,6 +81,9 @@ bool findHandle_(tzc_transport::findHandle::Request &req, tzc_transport::findHan
   int imageNo = 0;
   for (int i=1; i<dataBuffer.size(); ++i)
   {
+    if (dataBuffer[i].getReleaseInfo() == 0) {
+      continue;
+    }
     ROS_INFO("%d %f %f ", i, dataBuffer[i].timeStamp.toSec(), fabs(dataBuffer[i].timeStamp.toSec() - reqtoSec));
     if(fabs(dataBuffer[i].timeStamp.toSec() - reqtoSec) < minSec)
     {
@@ -75,9 +91,20 @@ bool findHandle_(tzc_transport::findHandle::Request &req, tzc_transport::findHan
       imageNo = i;
     }
   }
+/*	//dxh cannot find version
+  if(minSec > 10)
+  {
+    res.data_handle = -1;
+  }
+  else
+  {
+    res.data_handle = dataBuffer[imageNo].data_handle;
+  }
+*/
 
+  ShmManager * pshm = new tzc_transport::ShmManager(boost::interprocess::open_only, "_kinect2_raw_color");
   res.data_handle = dataBuffer[imageNo].data_handle;
-
+  
   ROS_INFO("sending back response: [%ld]", (long int)imageNo);
   ROS_INFO("dataBuffer[imageNo].timeStamp = %f", dataBuffer[imageNo].timeStamp.toSec());
   ROS_INFO("timediff = %lf", minSec);
@@ -86,7 +113,16 @@ bool findHandle_(tzc_transport::findHandle::Request &req, tzc_transport::findHan
 }
 
 void releaseCallback(const std_msgs::Float64::ConstPtr & msg) {
-  ROS_INFO("release msg->data = %f", msg->data);
+  //ROS_INFO("release msg->data = %f", msg->data);
+  for (int i=0; i<dataBuffer.size(); ++i)
+  {
+    if (dataBuffer[i].timeStamp.toSec() == msg->data)
+    {
+      //ROS_INFO("FIND IT, imageNo = %d", i);
+      dataBuffer[i].releaseThis();
+      break;
+    }
+  }
 }
 
 int main(int argc, char ** argv) {
