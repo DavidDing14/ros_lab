@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(tzc_transport)
-
+SET( CMAKE_CXX_FLAGS "-std=c++11 -O3")
 ## Add support for C++11, supported in ROS Kinetic and newer
 # add_definitions(-std=c++11)
 
@@ -217,6 +217,6 @@ target_link_libraries(tzc_listener_ ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} -lrt
 add_dependencies(tzc_listener_ tzc_transport_generate_messages_cpp)
 
 add_executable(test_findHandle src/test_findHandle.cpp)
-target_link_libraries(test_findHandle ${catkin_LIBRARIES} -lrt)
+target_link_libraries(test_findHandle ${catkin_LIBRARIES} ${OpenCV_LIBRARIES} -lrt)
 add_dependencies(test_findHandle tzc_transport_generate_messages_cpp)
 

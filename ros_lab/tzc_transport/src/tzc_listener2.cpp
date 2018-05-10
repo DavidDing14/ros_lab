@@ -9,17 +9,9 @@
 #include <std_msgs/Float64.h>
 #include <unordered_map>
 
-// __USE_UNORDERED_MAP__ :
-//	1 : vector
-//	2 : unordered_map
-
-#define __USE_UNORDERED_MAP__ 2
-
 using namespace tzc_transport;
 
 double minDuration = 0.001;	//dxh when release image, the duration between aim and dataHandler[i], see Func :: releaseCallback() for detail
-
-#if __USE_UNORDERED_MAP__ == 1
 
 class dataHandler	//dxh  save timeStamp and data_handle, so that we can find data_handle with timeStamp, and use data_handle with pobj to find data_address
 {
@@ -45,14 +37,6 @@ private:
 };
 
 std::vector<dataHandler> dataBuffer;	//dxh
-
-#elif __USE_UNORDERED_MAP__ == 2
-
-std::unordered_map<double, long> mapBuffer;	//an unordered_map of ros::Time(timeStamp) to long(data_handle)
-
-#endif	// container statement
-
-#if __USE_UNORDERED_MAP__ == 1
 
 void chatterCallback(const ImageConstPtr & msg) {
   //ROS_INFO("I heard: [%d, %f] deltaT=%fms \n data_handle=%ld  ref=%d", *(uint32_t *)msg->data, msg->header.stamp.toSec(),
@@ -143,63 +127,6 @@ void releaseCallback(const std_msgs::Float64::ConstPtr & msg) {
     }
   }
 }
-
-#elif __USE_UNORDERED_MAP__ == 2
-
-void chatterCallback(const ImageConstPtr & msg) {
-  ros::Duration t_ = ros::Time::now() - msg->header.stamp;
-  ROS_INFO("time duration = %f", t_.toSec());
-  std::pair<double, long> newData (msg->header.stamp.toSec(), msg->data_handle);
-  mapBuffer.insert(newData);
-}
-
-bool findHandle_(tzc_transport::findHandle::Request &req, tzc_transport::findHandle::Response &res)
-{
-  double reqtoSec = req.timeStamp.toSec();
-  ROS_INFO("request: timeStamp = %f", reqtoSec);
-  double minSec = 100000;
-  std::unordered_map<double, long>::iterator imageNo;
-  std::unordered_map<double, long>::iterator x;  
-  for (x = mapBuffer.begin(); x != mapBuffer.end(); ++x)
-  {
-    if(fabs(x->first - reqtoSec) < minSec)
-    {
-      minSec = fabs(x->first - reqtoSec);
-      imageNo = x;
-    }
-  }
-/*	//dxh cannot find version
-  if(minSec > 10)
-  {
-    res.data_handle = -1;
-  }
-  else
-  {
-    res.data_handle = dataBuffer[imageNo].data_handle;
-  }
-*/
-
-  ShmManager * pshm = new tzc_transport::ShmManager(boost::interprocess::open_only, "_kinect2_raw_color");
-  ShmMessage * msgData = (ShmMessage *)pshm->get_address_from_handle(imageNo->second);
-  msgData->addSaveRef();
-  res.data_handle = imageNo->second;
-
-  return true;
-}
-
-void releaseCallback(const std_msgs::Float64::ConstPtr & msg) {
-  std::unordered_map<double, long>::const_iterator got = mapBuffer.find (msg->data);
-
-  if ( got == mapBuffer.end() ) 
-    ROS_INFO("not found a image to release");
-  else
-  {
-    ROS_INFO("found image %f, data_handle is %ld", got->first, got->second);
-    mapBuffer.erase(got);
-  }
-}
-
-#endif
 
 int main(int argc, char ** argv) {
   ros::init(argc, argv, "tzc_listener", ros::init_options::AnonymousName);
